@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.Extensions.Configuration;
 using TabloidMVC.Models;
 
@@ -7,6 +8,8 @@ namespace TabloidMVC.Repositories
     public class CategoryRepository : BaseRepository, ICategoryRepository
     {
         public CategoryRepository(IConfiguration config) : base(config) { }
+      
+        
         public List<Category> GetAll()
         {
             using (var conn = Connection)
@@ -14,7 +17,9 @@ namespace TabloidMVC.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT id, name FROM Category";
+                    cmd.CommandText = @"SELECT c.id, c.name  
+                                        FROM Category c
+                                        order by c.Name";
                     var reader = cmd.ExecuteReader();
 
                     var categories = new List<Category>();
