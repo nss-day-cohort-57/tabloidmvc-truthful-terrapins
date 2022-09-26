@@ -42,5 +42,21 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+        public void AddTag(Tag tag)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO Tag (Name)
+                        OUTPUT INSERTED.ID
+                        VALUES (@Name)";
+                    cmd.Parameters.AddWithValue("@Name", tag.Name);
+                    tag.Id = (int)cmd.ExecuteScalar();
+                }
+            }
+        }
     }
 }
