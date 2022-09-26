@@ -58,5 +58,53 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+        public Tag GetTagById(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT t.Id, t.Name
+                        FROM Tag t
+                        WHERE t.id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+                    var reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        Tag tag = new Tag()
+                        {
+                            Id= reader.GetInt32(reader.GetOrdinal("id")),
+                            Name = reader.GetString(reader.GetOrdinal("name"))
+                        };
+                        return tag;
+                    }
+                    return null;
+                }
+            }
+        }
+        public void UpdateTag(Tag tag)
+        {
+            using (var conn =Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            UPDATE Tag
+                            SET
+                                Name = @name
+                            WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@name", tag.Name);
+                    cmd.Parameters.AddWithValue("@id", tag.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
