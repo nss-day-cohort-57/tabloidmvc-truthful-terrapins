@@ -30,16 +30,18 @@ namespace TabloidMVC.Controllers
 
         public IActionResult Create()
         {
-           
+            var cat = new Category();
             var Categories = _categoryRepository.GetAll();
-            return View(Categories);
+            return View(cat);
         }
 
         [HttpPost]
         public IActionResult Create(Category category)
         {
             try
-            {  
+            {
+
+                category.Name = category.Name;
                 _categoryRepository.Add(category);
 
                 return RedirectToAction("Index", new { id = category.Id });
