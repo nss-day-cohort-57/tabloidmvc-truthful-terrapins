@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TabloidMVC.Models;
 using TabloidMVC.Utils;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace TabloidMVC.Repositories
 {
@@ -66,21 +67,36 @@ namespace TabloidMVC.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT Id, FirstName, LastName
-                        FROM UserProfile
+                        SELECT DisplayName, FirstName, LastName, UserTypeId, UserType.Name as UserTypeName 
+                        FROM UserProfile  
+                        JOIN UserType 
+                        ON UserType.Id = UserProfile.UserTypeId
+                        ORDER BY DisplayName ASC
                     ";
+
+                    
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         List <UserProfile> users = new List <UserProfile>();
+                        
                         while (reader.Read())
                         {
                             UserProfile user = new UserProfile
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                DisplayName = reader.GetString(reader.GetOrdinal("DisplayName")),
                                 FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-                                LastName = reader.GetString(reader.GetOrdinal("LastName"))
+                                LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                                UserTypeId = reader.GetInt32(reader.GetOrdinal("UserTypeId")),
+                                UserType = new UserType
+                                {
+                                    Name = reader.GetString(reader.GetOrdinal("UserTypeName"))
+                                }
+                                
                             };
+                            
+
+                            
 
                             users.Add(user);
                         }
