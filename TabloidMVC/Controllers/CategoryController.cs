@@ -52,6 +52,34 @@ namespace TabloidMVC.Controllers
                 return View();
             }
         }
+
+        // GET: CAtegoriesController/Edit/5
+        public ActionResult Edit(int id)
+        {
+            Category category = _categoryRepository.GetCategoryById(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            return View(category);
+        }
+
+        // POST: CategoriesController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, Category category)
+        {
+            try
+            {
+                _categoryRepository.UpdateCategory(category);
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View(category);
+            }
+        }
+
         // GET: Categories/Delete
         public ActionResult Delete(int id)
         {
