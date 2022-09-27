@@ -17,6 +17,7 @@ namespace TabloidMVC.Models
         [DisplayName("Header Image URL")]
         public string ImageLocation { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime CreateDateTime { get; set; }
 
         [DisplayName("Published")]
