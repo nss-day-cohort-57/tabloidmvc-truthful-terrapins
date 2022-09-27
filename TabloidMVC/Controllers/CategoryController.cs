@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -51,6 +52,30 @@ namespace TabloidMVC.Controllers
                 return View();
             }
         }
+        // GET: Categories/Delete
+        public ActionResult Delete(int id)
+        {
+            Category category = _categoryRepository.GetCategoryById(id);
+            return View(category);
+        }
+
+        // POST: CatController/Delete
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, Category category)
+        {
+            try
+            {
+                _categoryRepository.DeleteCategory(id);
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                return View(category);
+            }
+        }
+
 
         private int GetCurrentUserProfileId()
         {
