@@ -11,7 +11,6 @@ namespace TabloidMVC.Repositories
     {
         public CategoryRepository(IConfiguration config) : base(config) { }
       
-        //get
         public List<Category> GetAll()
         {
             using (var conn = Connection)
@@ -38,6 +37,27 @@ namespace TabloidMVC.Repositories
                     reader.Close();
 
                     return categories;
+                }
+            }
+        }
+
+        public void UpdateCategory(Category category)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            UPDATE Category
+                            SET
+                                Name = @name
+                            WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@name", category.Name);
+                    cmd.Parameters.AddWithValue("@id", category.Id);
+
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
