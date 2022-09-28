@@ -105,5 +105,54 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+
+        public UserProfile GetUserById(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT FirstName, LastName, DisplayName, Email, CreateDateTime, UserTypeId, UserType.Name UserTypeName 
+                        FROM UserProfile  
+                        JOIN UserType 
+                        ON UserType.Id = UserProfile.UserTypeId
+                        
+                    ";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            UserProfile user = new UserProfile
+                            {
+                                
+                                FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                                LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                                //ImageLocation = reader.GetString(reader.GetOrdinal("ImageLocation")),
+                                DisplayName = reader.GetString(reader.GetOrdinal("DisplayName")),
+                                Email = reader.GetString(reader.GetOrdinal("Email")),
+                                CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                                UserType = new UserType
+                                {
+                                    Name = reader.GetString(reader.GetOrdinal("UserTypeName"))
+                                }
+
+                                
+                            };
+
+                            return user;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
