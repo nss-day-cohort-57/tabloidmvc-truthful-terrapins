@@ -28,12 +28,14 @@ namespace TabloidMVC.Controllers
             _tagRepository = tagRepository;
         }
 
+        //GET: Post
         public IActionResult Index()
         {
             var posts = _postRepository.GetAllPublishedPosts();
             return View(posts);
         }
 
+        //GET: Post/Details/5
         public IActionResult Details(int id)
         {
             var post = _postRepository.GetPublishedPostById(id);
@@ -49,14 +51,15 @@ namespace TabloidMVC.Controllers
             return View(post);
         }
 
+        //GET: Post/Create
         public IActionResult Create()
         {
             var vm = new PostCreateViewModel();
             vm.CategoryOptions = _categoryRepository.GetAll();
-            //vm.Post.PublishDateTime = DateTime.Now;
             return View(vm);
         }
 
+        //POST: Post/Create
         [HttpPost]
         public IActionResult Create(PostCreateViewModel vm)
         {
@@ -109,6 +112,30 @@ namespace TabloidMVC.Controllers
             catch
             {
                 return View(vm);
+            }
+        }
+
+        // GET: Post/Delete/5
+        [Authorize]
+        public ActionResult Delete(int id)
+        {
+            int userId = GetCurrentUserProfileId();
+            Post post = _postRepository.GetUserPostById(id, userId);
+            return View(post);
+        }
+
+        //POST : Post/Delelte/5
+        [HttpPost]
+        public ActionResult Delete(int id, Post post)
+        {
+            try
+            {
+                _postRepository.DeletePost(id);
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View(post);
             }
         }
 
