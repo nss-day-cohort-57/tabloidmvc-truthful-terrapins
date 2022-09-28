@@ -38,7 +38,8 @@
                 @Html.DisplayFor(modelItem => item.UserType.Name)
             </td>
             <td>
-                @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary mx-1" title="Details">
+                            <i class="fas fa-eye"></i></a>
             </td>
         </tr>
 
