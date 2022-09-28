@@ -5,6 +5,9 @@ using Microsoft.VisualBasic;
 using System.Security.Claims;
 using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Repositories;
+using TabloidMVC.Models;
+using System.Collections.Generic;
+using System;
 
 namespace TabloidMVC.Controllers
 {
@@ -50,6 +53,7 @@ namespace TabloidMVC.Controllers
         {
             var vm = new PostCreateViewModel();
             vm.CategoryOptions = _categoryRepository.GetAll();
+            //vm.Post.PublishDateTime = DateTime.Now;
             return View(vm);
         }
 
@@ -58,7 +62,7 @@ namespace TabloidMVC.Controllers
         {
             try
             {
-                vm.Post.CreateDateTime = DateAndTime.Now;
+                vm.Post.CreateDateTime = DateTime.Now;
                 vm.Post.IsApproved = true;
                 vm.Post.UserProfileId = GetCurrentUserProfileId();
 
@@ -69,6 +73,41 @@ namespace TabloidMVC.Controllers
             catch
             {
                 vm.CategoryOptions = _categoryRepository.GetAll();
+                return View(vm);
+            }
+        }
+
+        // GET: Post/Edit/5
+        [Authorize]
+        public ActionResult Edit(int id)
+        {
+            List<Category> categories = _categoryRepository.GetAll();
+
+            PostCreateViewModel vm = new PostCreateViewModel()
+            {
+                Post = _postRepository.GetPublishedPostById(id),
+                CategoryOptions = categories
+        };
+            if (vm == null)
+            {
+                return NotFound();
+            }
+            return View(vm);
+        }
+
+        // POST: Post/Edit/5
+        [HttpPost]
+        public ActionResult Edit(int id, PostCreateViewModel vm)
+        {
+            List<Category> categories = _categoryRepository.GetAll();
+            vm.CategoryOptions = categories;
+            try
+            {
+                _postRepository.UpdatePost(vm.Post);
+                return RedirectToAction("Index");
+            }
+            catch
+            {
                 return View(vm);
             }
         }
