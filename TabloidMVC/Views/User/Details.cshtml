@@ -1,0 +1,51 @@
+﻿@model TabloidMVC.Models.UserProfile
+
+@{
+    ViewData["Title"] = "Details";
+}
+<div class="container pt-5">
+
+    <h1 class="text-secondary">  User Details:</h1>
+
+<div class="container pt-5">
+    <div class="post">
+        <section class="px-3">
+            <div class="row justify-content-between">
+                <h1 class="text-secondary">@Model.FullName</h1>
+                    <div class="row">
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary mx-1" title="Edit">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-primary mx-1" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+            </div>
+        </section>
+        <hr />
+            <section class="row post__content">
+        @if (!string.IsNullOrWhiteSpace(Model.ImageLocation))
+        {
+            <section class="row justify-content-center">
+                <div>
+                    <img src="@Model.ImageLocation" />
+                </div>
+            </section>
+        }
+        else
+        {
+                <section class="row justify-content-center">
+                    <div>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg" />
+                    </div>
+                </section>
+        }
+     
+            <div class="col-sm-12 mt-5"><b>Full Name: </b>@Html.DisplayFor(model => model.FullName)</div>
+            <div class="col-sm-12 mt-5"><b>Email: </b>@Model.Email</div>
+            <div class="col-sm-12 mt-5"><b>Account Created On: </b> @Html.DisplayFor(model => model.CreateDateTime)</div>
+            <div class="col-sm-12 mt-5"><b>User Type: </b>@Html.DisplayFor(model => model.UserType.Name)</div>
+        </section>
+        </div>
+    </div>
+</div>

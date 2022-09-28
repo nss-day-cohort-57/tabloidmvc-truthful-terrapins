@@ -20,5 +20,17 @@ namespace TabloidMVC.Controllers
         {
             _userRepo = userProfileRepository;
         }
+
+        public ActionResult Details(int id)
+        {
+            UserProfile user = _userRepo.GetUserById(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
+        }
     }
 }
