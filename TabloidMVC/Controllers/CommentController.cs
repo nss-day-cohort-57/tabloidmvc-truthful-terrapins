@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
 using System;
 using System.Security.Claims;
+using TabloidMVC.Models;
 using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Repositories;
 
@@ -56,11 +57,13 @@ namespace TabloidMVC.Controllers
             int UserId = GetCurrentUserProfileId();
             try
             {
+                var post = _postRepository.GetPublishedPostById(id);
+                ViewData["PostId"] = post.Id;
                 vm.Comment.CreateDateTime = DateTime.Now;
                 vm.Comment.UserProfileId = UserId;
                 vm.Comment.PostId = id;
                 _commentRepository.AddComment(vm.Comment);
-                return RedirectToAction("Index", new { id = vm.Comment.Id });
+                return RedirectToAction("Index", new { id = post.Id });
             }
             catch
             {

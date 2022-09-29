@@ -83,7 +83,6 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@CreateDateTime", comment.CreateDateTime);
 
                     int id = (int)cmd.ExecuteScalar();
-                    DateTime createDateTime = (DateTime)cmd.ExecuteScalar();
 
                     comment.Id = id;
                 }
