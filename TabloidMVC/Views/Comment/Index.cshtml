@@ -1,0 +1,53 @@
+﻿@model IEnumerable<TabloidMVC.Models.Comment>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+  <h1 class="text-secondary">@ViewData["PostTitle"]</h1>
+
+<div class="container pt-5">
+    <h1>Comments</h1>
+    <p>
+        <a asp-route-id="@ViewData["PostId"]" class="btn btn-primary" asp-action="Create">Create Comment</a>
+    </p>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Subject)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Content)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserProfile.DisplayName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CreateDateTime)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Subject)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Content)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserProfile.DisplayName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreateDateTime)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a asp-route-id="@ViewData["PostId"]" asp-controller="Post" asp-action="Details">Back to Post</a>
+</div>
