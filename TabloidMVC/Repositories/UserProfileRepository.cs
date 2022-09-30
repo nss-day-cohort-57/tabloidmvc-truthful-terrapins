@@ -5,6 +5,7 @@ using TabloidMVC.Models;
 using TabloidMVC.Utils;
 using System.Data.SqlClient;
 using System.Data;
+using System;
 
 namespace TabloidMVC.Repositories
 {
@@ -118,7 +119,7 @@ namespace TabloidMVC.Repositories
                         FROM UserProfile  
                         JOIN UserType 
                         ON UserType.Id = UserProfile.UserTypeId
-                        
+                        WHERE UserProfile.Id = @id
                     ";
 
                     cmd.Parameters.AddWithValue("@id", id);
@@ -151,6 +152,36 @@ namespace TabloidMVC.Repositories
                             return null;
                         }
                     }
+                }
+            }
+        }
+
+        public int CreateUser(UserProfile userProfile)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                    INSERT INTO UserProfile (FirstName, LastName, Email, DisplayName, ImageLocation, UserTypeId, CreateDateTime )
+                    OUTPUT INSERTED.ID
+                    VALUES (@firstName, @lastName, @email, @displayName, @imageLocation, @userTypeId, @createDateTime)
+                    ";
+
+                    cmd.Parameters.AddWithValue("@firstName", userProfile.FirstName);
+                    cmd.Parameters.AddWithValue("@lastName", userProfile.LastName);
+                    cmd.Parameters.AddWithValue("@email", userProfile.Email);
+                    cmd.Parameters.AddWithValue("@displayName", userProfile.DisplayName);
+                    cmd.Parameters.AddWithValue("@imageLocation", userProfile.ImageLocation);
+                    cmd.Parameters.AddWithValue("@userTypeId", 1);
+                    cmd.Parameters.AddWithValue("@createDateTime", userProfile.CreateDateTime);
+
+
+
+                    int id = (int)cmd.ExecuteScalar();
+
+                    return id;
                 }
             }
         }
